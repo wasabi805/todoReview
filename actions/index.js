@@ -69,7 +69,6 @@ export const sortByName = (items)=> (dispatch) => {
         };
 
         const result = items.sort(compare);
-
         dispatch(sortThings(result));
     }
 };
