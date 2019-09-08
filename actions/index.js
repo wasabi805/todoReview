@@ -72,3 +72,18 @@ export const sortByName = (items)=> (dispatch) => {
         dispatch(sortThings(result));
     }
 };
+
+
+export const makeInputEdits = (inputEdit , indexOfCard)=>{
+    console.log('makeInputEdits-action')
+    return{
+        type: 'MAKE_INPUT_EDITS',
+
+        payload: {
+            index : indexOfCard,
+            inputEdit : inputEdit
+        }
+    }
+};
+
+

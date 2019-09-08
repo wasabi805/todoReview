@@ -4,7 +4,8 @@ const initialState = {
     price: "",
     description: "",
     isFavorite: false,
-    todos: []
+    todos: [],
+
 };
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +49,28 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 todos : [...state.todos,]
+            };
+
+        case 'MAKE_INPUT_EDITS':
+            console.log(action.payload.inputEdit, 'reducer MAKE_INPUT_EDITS');
+            //take todos array and splice in edited card
+            const i = action.payload.index;
+
+            let edits = [...state.todos];
+            let updateObject = {};
+
+            Object.keys(action.payload.inputEdit).forEach((key) => {
+                let newKey = key.replace('edit_', '');
+                updateObject[newKey] = action.payload.inputEdit[key];
+            });
+
+            let updatedObject = {...edits[i], ...updateObject};
+
+            edits[i] = updatedObject;
+
+            return {
+                ...state,
+                todos : edits
             };
 
         default:

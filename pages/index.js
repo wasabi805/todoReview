@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
-import { updateField, addTodoAndClear, toggleFavorite, deleteTodo, sortByName } from '../actions';
+import { updateField, addTodoAndClear, toggleFavorite, deleteTodo, sortByName, makeInputEdits  } from '../actions';
 
-const Index = ({prodId, name, price, description, isFavorite, updateField, addTodoAndClear, todos, toggleFavorite, deleteTodo, sortByName}) => {
+const Index = ({prodId, name, price, description, isFavorite, updateField, addTodoAndClear, todos, toggleFavorite, deleteTodo, sortByName , makeInputEdits}) => {
+
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -34,7 +35,19 @@ const Index = ({prodId, name, price, description, isFavorite, updateField, addTo
         sortByName(todos);
     };
 
+
+
+
     const TodoCard = ({todo, idx}) => {
+
+        const [isEdit , setIsEdit ] = useState(false);
+
+        const [editFields , setEditFields ] = useState({
+            'edit_name' : todo.name,
+            'edit_price' : todo.price,
+            'edit_description' : todo.description
+        });
+
         const cardStyle = {
             border: '2px solid black',
             padding: '20px',
@@ -42,20 +55,55 @@ const Index = ({prodId, name, price, description, isFavorite, updateField, addTo
             display: 'block'
         };
 
+        const handleEditOnChange = (e) => {
+            setEditFields({
+                ...editFields,
+                [e.target.name] : e.target.value
+            })
+        };
+
+        const handleSubmitEdits = ()=>{
+            // editFields
+            console.log('at least')
+            makeInputEdits(editFields, idx)
+        };
+
+
         const favorite = todo.isFavorite ? 'True' : 'False';
 
 
-        return (
-          <div style={cardStyle}>
-              <input type={'button'} onClick={() => handleDelete(idx)} value={'Delete'}/>
-              <input type={'button'} onClick={() => handleFavorite(idx)} value={'Favorite'}/>
-              <p>Product ID: {todo.prodId} </p>
-              <p>Item name: {todo.name}</p>
-              <p>Price: {todo.price}</p>
-              <p>Description: {todo.description}</p>
-              <p>IsFavorite: {favorite}</p>
-          </div>
-        );
+        const borders = {
+            border: '1px solid black'
+        };
+
+        let content = isEdit ?
+            <div >
+                <p>Product ID: </p>
+                <p>Item name:<input type="text" value={editFields["edit_name"]} onChange={handleEditOnChange} name={"edit_name"} style={borders} /></p>
+
+                <p>Price: <input type="text" value={editFields["edit_price"]} onChange={handleEditOnChange} name={"edit_price"} style={borders} /></p>
+
+                <p>Description: <input type="text" value={editFields["edit_description"]} onChange={handleEditOnChange} name={"edit_description"} style={borders} /></p>
+
+                <p>IsFavorite: {favorite}</p>
+
+                <input value={'make change'} type={'button'}  onClick={handleSubmitEdits}  style={borders}  />
+            </div>
+
+
+
+            : <div style={cardStyle}>
+            <input type={'button'} onClick={() => setIsEdit(!isEdit)} value={'Edit'}/>
+            <input type={'button'} onClick={() => handleDelete(idx)} value={'Delete'}/>
+            <input type={'button'} onClick={() => handleFavorite(idx)} value={'Favorite'}/>
+            <p>Product ID: {todo.prodId} </p>
+            <p>Item name: {todo.name}</p>
+            <p>Price: {todo.price}</p>
+            <p>Description: {todo.description}</p>
+            <p>IsFavorite: {favorite}</p>
+        </div>;
+
+        return content;
     };
 
     return (
@@ -110,7 +158,8 @@ const mapDispatchToProps = {
     addTodoAndClear,
     toggleFavorite,
     deleteTodo,
-    sortByName
+    sortByName,
+    makeInputEdits
 };
 
 export default connect(
