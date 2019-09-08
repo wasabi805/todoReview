@@ -12,6 +12,7 @@ const Index = ({prodId, name, price, description, isFavorite, updateField, addTo
     };
 
     const handleSubmit = () => {
+        // this function does things
         addTodoAndClear({
             prodId: prodId,
             name: name,
